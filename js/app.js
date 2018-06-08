@@ -3,6 +3,29 @@
  */
 
 
+const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-anchor", "fa-leaf", "fa-bicycle", "fa-diamond", "fa-bomb", "fa-leaf", "fa-bomb", "fa-bolt", "fa-bicycle", "fa-paper-plane-o", "fa-cube"];
+
+
+/**
+ * Added logic to load card on page
+ */
+function loadCardsOnPage() {
+    var lists = createCardList(faList);
+    var deck = document.querySelector('.deck');
+    for (list of lists) {
+        deck.insertAdjacentHTML('beforeend', list);
+    }
+}
+
+function createCardList(faList) {
+    return faList.map(faName => {
+        return `<li class="card show"><i class="fa ${faName}"></i></li>`;
+    });
+ }
+
+
+ loadCards();
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
