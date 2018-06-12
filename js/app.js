@@ -4,16 +4,33 @@
 
 
 const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-anchor", "fa-leaf", "fa-bicycle", "fa-diamond", "fa-bomb", "fa-leaf", "fa-bomb", "fa-bolt", "fa-bicycle", "fa-paper-plane-o", "fa-cube"];
+const openCards = [];
+init();
+
+const cards = document.getElementsByClassName('card');
+for (const card of cards) {
+    card.addEventListener('click', displayCard, false);
+}
+
+
+
+/*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+ */
 
 
 /**
  * Added logic to load card on page
  */
-function loadCardsOnPage() {
-    var lists = createCardList(faList);
-    var deck = document.querySelector('.deck');
-    for (list of lists) {
-        deck.insertAdjacentHTML('beforeend', list);
+function loadCardsOnPage(faList) {
+    const cardList = createCardList(faList);
+    const shuffledCardList = shuffle(cardList);
+    const deck = document.querySelector('.deck');
+    for (const card of shuffledCardList) {
+        deck.insertAdjacentHTML('beforeend', card);
     }
 }
 
@@ -22,16 +39,6 @@ function createCardList(faList) {
         return `<li class="card show"><i class="fa ${faName}"></i></li>`;
     });
  }
-
-
- loadCards();
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -48,6 +55,21 @@ function shuffle(array) {
     return array;
 }
 
+function displayCard(e) {
+    this.classList.toggle('show');
+    openCards.push(this);
+    matchSelectedCardToPreviousCard();
+}
+
+function matchSelectedCardToPreviousCard() {
+    if (openCards.length == 0 || openCards.length == 1) {
+        return false;
+    }
+    const length = openCards.length;
+    const isMatch = openCards[length - 1].className === openCards[length -2].className;
+    console.log(isMatch);
+
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -59,3 +81,8 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+ function init() {
+    const cardList = createCardList(faList);
+    loadCardsOnPage(faList);
+ }
