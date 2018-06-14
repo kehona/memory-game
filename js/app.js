@@ -5,11 +5,14 @@
 
 const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-anchor", "fa-leaf", "fa-bicycle", "fa-diamond", "fa-bomb", "fa-leaf", "fa-bomb", "fa-bolt", "fa-bicycle", "fa-paper-plane-o", "fa-cube"];
 const openCards = [];
+let previousSelection = "";
+let currentSelection = "";
 init();
 
 const cards = document.getElementsByClassName('card');
 for (const card of cards) {
-    card.addEventListener('click', displayCard, false);
+    card.addEventListener('click', showCard, false);
+    card.addEventListener('transitionend', removeTransition);
 }
 
 
@@ -36,7 +39,7 @@ function loadCardsOnPage(faList) {
 
 function createCardList(faList) {
     return faList.map(faName => {
-        return `<li class="card show"><i class="fa ${faName}"></i></li>`;
+        return `<li class="card"><i class="fa ${faName}"></i></li>`;
     });
  }
 
@@ -55,21 +58,50 @@ function shuffle(array) {
     return array;
 }
 
-function displayCard(e) {
-    this.classList.toggle('show');
-    openCards.push(this);
-    matchSelectedCardToPreviousCard();
+function showCard(e) {
+    this.classList.add('show', 'open');
+    if (previousSelection == "") {
+        previousSelection = this;
+        this.removeEventListener('click', reset);
+    } else {
+        currentSelection = this;
+        if (matchSelectedCardToPreviousCard()) {
+            previousSelection.classList.add('match');
+            this.classList.add('match');
+            openCards.push(previousSelection);
+            openCards.push(currentSelection);
+            this.removeEventListener('click', reset);
+            resetSelectedCards();
+        } else {
+            previousSelection.classList.add('mismatch');
+            currentSelection.classList.add('mismatch');
+            // previousSelection.classList.remove('show', "open");
+            // currentSelection.classList.remove('show', "open");
+            resetSelectedCards();
+        }   
+    }
+}
+
+function removeTransition(e) {
+    if (e.propertyName === "transform") {
+        this.classList.remove('mismatch','show', "open")
+        // currentSelection.classList.remove('mismatch','show', "open")
+    }
+    console.log(e)
 }
 
 function matchSelectedCardToPreviousCard() {
-    if (openCards.length == 0 || openCards.length == 1) {
-        return false;
-    }
-    const length = openCards.length;
-    const isMatch = openCards[length - 1].className === openCards[length -2].className;
-    console.log(isMatch);
+    return previousSelection.isEqualNode(currentSelection);
 
 }
+
+function reset() {
+    console.log("cliek event removed");
+}
+ function resetSelectedCards() {
+    previousSelection = "";
+    currentSelection = "";
+ }
 
 /*
  * set up the event listener for a card. If a card is clicked:
