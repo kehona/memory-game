@@ -2,8 +2,6 @@
  * Create a list that holds all of your cards
  */
 
-
-const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle", "fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle"];
 const openCards = [];
 let previousSelection = "";
 let currentSelection = "";
@@ -43,6 +41,10 @@ function createCardList(faList) {
         return `<li class="card"><i class="fa ${faName}"></i></li>`;
     });
  }
+
+ // restart game
+ const restartIcon = document.querySelector('.restart');
+ restartIcon.addEventListener('click', init);
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -136,6 +138,14 @@ function isGameOver() {
  */
 
  function init() {
+    console.log("initalizing game!")
+    const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle", "fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle"];
+    const deck = document.querySelector('.deck');
+    deck.innerHTML = "";
+    const openCards = [];
+    let previousSelection = "";
+    let currentSelection = "";
+    let moveCounter = 0;
     const cardList = createCardList(faList);
     loadCardsOnPage(faList);
     addEventListenersToGame();
