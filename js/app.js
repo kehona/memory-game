@@ -2,7 +2,7 @@
  * Create a list that holds all of your cards
  */
 
-const openCards = [];
+let openCards = [];
 let previousSelection = "";
 let currentSelection = "";
 let moveCounter = 0;
@@ -92,17 +92,23 @@ function showCard(e) {
         } 
         // increment the number of moves by 1 after every two selections
         moveCounter++;
+        setNumberOfStarsOnPage();
+        setMoves();
+        console.log("Number of stars:", getNumberOfStars());
     }
     // if all cards are open, alert game over
     if (isGameOver()) {
         setTimeout(() => {
             alert("Game Over!");
-        }, 1000)
-        
-    }
-    
+            console.log("Congratulations, you won with", moveCounter , "moves!!!");
+        }, 1000)   
+    }  
 }
 
+/**
+ * Transition effect for cards that do not match
+ * @param {*} e 
+ */
 function removeTransition(e) {
     if (e.propertyName === "transform") {
         console.log(this);
@@ -112,6 +118,11 @@ function removeTransition(e) {
     console.log(e)
 }
 
+
+
+/**
+ *  check if the selected cards match.
+ */
 function matchSelectedCardToPreviousCard() {
     return previousSelection.isEqualNode(currentSelection);
 
@@ -124,6 +135,32 @@ function resetSelectedCards() {
 
 function isGameOver() {
     return openCards.length === 16;
+}
+
+function setNumberOfStarsOnPage() {
+    const stars = document.querySelector('.stars');
+    stars.innerHTML = "";
+    const numberOfStarsToDisplay = getNumberOfStars();
+    for (let i = 0; i < numberOfStarsToDisplay; i++) {
+        const li = document.createElement("li");
+        li.insertAdjacentHTML('beforeend', '<i class="fa fa-star"></i>');
+        stars.appendChild(li);
+    }
+}
+
+function setMoves() {
+    const moves = document.querySelector('.moves');
+    moves.innerHTML = moveCounter;
+}
+/**
+ * determines the number of stars to display
+ */
+function getNumberOfStars() {
+    if (moveCounter <= 8) {
+        return 5;
+    } else {
+        return parseInt(5 / (moveCounter / 8));
+    }
 }
 
 /*
@@ -142,11 +179,13 @@ function isGameOver() {
     const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle", "fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle"];
     const deck = document.querySelector('.deck');
     deck.innerHTML = "";
-    const openCards = [];
-    let previousSelection = "";
-    let currentSelection = "";
-    let moveCounter = 0;
+    openCards = [];
+    previousSelection = "";
+    currentSelection = "";
+    moveCounter = 0;
     const cardList = createCardList(faList);
+    setMoves();
+    setNumberOfStarsOnPage();
     loadCardsOnPage(faList);
     addEventListenersToGame();
  }
