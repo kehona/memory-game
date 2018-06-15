@@ -61,11 +61,10 @@ function shuffle(array) {
 }
 
 function showCard(e) {
-    this.classList.add('show', 'open');
+    // show card and disable it.
+    this.classList.add('show', 'open', 'disable');
     if (previousSelection == "") {
         previousSelection = this;
-        // remove click event from card once it's been selected
-        this.removeEventListener('click', () => console.log(`click event removed from ${this}`));
     } else {
         currentSelection = this;
         // check if selections match

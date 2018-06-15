@@ -75,12 +75,15 @@ h1 {
     font-size: 33px;
 }
 
+.deck .card.disable {
+    pointer-events: none;
+}
+
 .deck .card.match {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
 }
-
 
 .deck .card.mismatch {
     background: red;
