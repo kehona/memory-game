@@ -111,7 +111,7 @@ function showCard(e) {
 function removeTransition(e) {
     if (e.propertyName === "transform") {
         console.log(this);
-        this.classList.remove('mismatch','show', "open")
+        this.classList.remove('mismatch','show', "open", "disable")
         // currentSelection.classList.remove('mismatch','show', "open")
     }
     console.log(e)
