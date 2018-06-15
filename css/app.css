@@ -85,7 +85,7 @@ h1 {
 .deck .card.mismatch {
     background: red;
     transform: scale(1.1);
-    transition:all 0.37s;
+    transition:all 0.50s;
 }
 /*
  * Styles for the Score Panel

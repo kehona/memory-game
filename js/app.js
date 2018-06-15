@@ -3,19 +3,20 @@
  */
 
 
-const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-anchor", "fa-leaf", "fa-bicycle", "fa-diamond", "fa-bomb", "fa-leaf", "fa-bomb", "fa-bolt", "fa-bicycle", "fa-paper-plane-o", "fa-cube"];
+const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle", "fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle"];
 const openCards = [];
 let previousSelection = "";
 let currentSelection = "";
+let moveCounter = 0;
 init();
 
-const cards = document.getElementsByClassName('card');
-for (const card of cards) {
-    card.addEventListener('click', showCard, false);
-    card.addEventListener('transitionend', removeTransition);
+function addEventListenersToGame() {
+    const cards = document.getElementsByClassName('card');
+    for (const card of cards) {
+        // add click event to card
+        card.addEventListener('click', showCard, false);
+    }  
 }
-
-
 
 /*
  * Display the cards on the page
@@ -30,7 +31,7 @@ for (const card of cards) {
  */
 function loadCardsOnPage(faList) {
     const cardList = createCardList(faList);
-    const shuffledCardList = shuffle(cardList);
+    const shuffledCardList = cardList; //shuffle(cardList);
     const deck = document.querySelector('.deck');
     for (const card of shuffledCardList) {
         deck.insertAdjacentHTML('beforeend', card);
@@ -54,7 +55,6 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
 
@@ -62,28 +62,48 @@ function showCard(e) {
     this.classList.add('show', 'open');
     if (previousSelection == "") {
         previousSelection = this;
-        this.removeEventListener('click', reset);
+        // remove click event from card once it's been selected
+        this.removeEventListener('click', () => console.log(`click event removed from ${this}`));
     } else {
         currentSelection = this;
-        if (matchSelectedCardToPreviousCard()) {
+        // check if selections match
+        const isMatch = matchSelectedCardToPreviousCard()
+        if (isMatch) {
+            // 1. add match class to card
             previousSelection.classList.add('match');
             this.classList.add('match');
+            // 2. add cards to openCards
             openCards.push(previousSelection);
             openCards.push(currentSelection);
-            this.removeEventListener('click', reset);
+            // 3. remove click event from current card
+            this.removeEventListener('click', () => console.log("click event removed!"));
+            // 4. reinitialize the card selection identifiers.
             resetSelectedCards();
         } else {
+            // if cards don't match, then add mismatch class to items for some brief moment
             previousSelection.classList.add('mismatch');
             currentSelection.classList.add('mismatch');
-            // previousSelection.classList.remove('show', "open");
-            // currentSelection.classList.remove('show', "open");
+            // 2. transition to remove mismatch, show and open from cards
+            previousSelection.addEventListener('transitionend', removeTransition);
+            currentSelection.addEventListener('transitionend', removeTransition);
             resetSelectedCards();
-        }   
+        } 
+        // increment the number of moves by 1 after every two selections
+        moveCounter++;
     }
+    // if all cards are open, alert game over
+    if (isGameOver()) {
+        setTimeout(() => {
+            alert("Game Over!");
+        }, 1000)
+        
+    }
+    
 }
 
 function removeTransition(e) {
     if (e.propertyName === "transform") {
+        console.log(this);
         this.classList.remove('mismatch','show', "open")
         // currentSelection.classList.remove('mismatch','show', "open")
     }
@@ -95,13 +115,14 @@ function matchSelectedCardToPreviousCard() {
 
 }
 
-function reset() {
-    console.log("cliek event removed");
-}
- function resetSelectedCards() {
+function resetSelectedCards() {
     previousSelection = "";
     currentSelection = "";
- }
+}
+
+function isGameOver() {
+    return openCards.length === 16;
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -117,4 +138,5 @@ function reset() {
  function init() {
     const cardList = createCardList(faList);
     loadCardsOnPage(faList);
+    addEventListenersToGame();
  }
