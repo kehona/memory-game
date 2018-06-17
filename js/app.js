@@ -1,11 +1,12 @@
-/*
- * Create a list that holds all of your cards
- */
 
 let openCards = [];
 let previousSelection = "";
 let currentSelection = "";
 let moveCounter = 0;
+
+/**
+ * Inialize the game
+ */
 init();
 
 function addEventListenersToGame() {
@@ -173,7 +174,7 @@ function showGameEndModal(){
     // clear modal 
     gameResult.innerHTML = "";
     // set with new data
-    const checkIcon ='<i class="fa fa-check-circle"></i>';
+    const checkIcon ='<i class="fa fa-diamond"></i>';
     gameResult.insertAdjacentHTML("afterbegin", `<p>Congratulations, You won with ${moveCounter} moves!</p>`);
     gameResult.insertAdjacentHTML("afterbegin", checkIcon);
     const gameEndModal = document.getElementById('gameEnd');
