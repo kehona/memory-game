@@ -13,7 +13,11 @@ function addEventListenersToGame() {
     for (const card of cards) {
         // add click event to card
         card.addEventListener('click', showCard, false);
-    }  
+    }
+    // modal restart button
+    const restartButton = document.getElementById('restart');
+    restartButton.addEventListener('click', closeModal);
+    
 }
 
 /*
@@ -98,9 +102,10 @@ function showCard(e) {
     // if all cards are open, alert game over
     if (isGameOver()) {
         setTimeout(() => {
-            alert("Game Over!");
-            console.log("Congratulations, you won with", moveCounter , "moves!!!");
-        }, 1000)   
+            showGameEndModal();
+            // alert("Game Over!");
+            // console.log("Congratulations, you won with", moveCounter , "moves!!!");
+        }, 500)   
     }  
 }
 
@@ -116,8 +121,6 @@ function removeTransition(e) {
     }
     console.log(e)
 }
-
-
 
 /**
  *  check if the selected cards match.
@@ -160,6 +163,31 @@ function getNumberOfStars() {
     } else {
         return parseInt(5 / (moveCounter / 8));
     }
+}
+
+/**
+ * Show the modal when the game is over!
+ */
+function showGameEndModal(){
+    const gameResult = document.getElementById('result');
+    // clear modal 
+    gameResult.innerHTML = "";
+    // set with new data
+    const checkIcon ='<i class="fa fa-check-circle"></i>';
+    gameResult.insertAdjacentHTML("afterbegin", `<p>Congratulations, You won with ${moveCounter} moves!</p>`);
+    gameResult.insertAdjacentHTML("afterbegin", checkIcon);
+    const gameEndModal = document.getElementById('gameEnd');
+    gameEndModal.showModal();
+}
+
+/**
+ * Closes the modal and restart game.
+ */
+function closeModal() {
+    const gameEndModal = document.getElementById('gameEnd');
+    gameEndModal.close();
+    // restart game;
+    init();
 }
 
 /*
