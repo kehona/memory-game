@@ -3,6 +3,8 @@ let openCards = [];
 let previousSelection = "";
 let currentSelection = "";
 let moveCounter = 0;
+let gameStarted = false;
+let timer;
 
 /**
  * Inialize the game
@@ -19,6 +21,32 @@ function addEventListenersToGame() {
     const restartButton = document.getElementById('restart');
     restartButton.addEventListener('click', closeModal);
     
+}
+
+// http://logicalmoon.com/2015/05/using-javascript-to-create-a-timer/
+function startTimer() {
+    let counter = 0;
+    let seconds = 0;
+    let mins = 0;
+    timer = setInterval(function() {
+        if (counter < 60) {
+            seconds = counter < 10 ? `0${counter}` : parseInt(counter % 60);
+            // let sec = parseInt(seconds / 60);
+            let minutes = mins < 10 ? `0${mins}` : mins;
+            time = `${minutes}:${seconds}`
+            document.getElementById('timer').textContent = time;
+            counter++;
+        } else {
+            counter = 1;
+            mins++;
+        }
+        
+        
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timer);
 }
 
 /*
@@ -102,10 +130,10 @@ function showCard(e) {
     }
     // if all cards are open, alert game over
     if (isGameOver()) {
+        // stop timer
+        stopTimer();
         setTimeout(() => {
             showGameEndModal();
-            // alert("Game Over!");
-            // console.log("Congratulations, you won with", moveCounter , "moves!!!");
         }, 500)   
     }  
 }
@@ -203,7 +231,9 @@ function closeModal() {
  */
 
  function init() {
-    console.log("initalizing game!")
+    console.log("initalizing game!");
+    stopTimer();
+    startTimer();
     const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle", "fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle"];
     const deck = document.querySelector('.deck');
     deck.innerHTML = "";
