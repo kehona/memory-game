@@ -29,8 +29,8 @@ function startTimer() {
     let seconds = 0;
     let mins = 0;
     timer = setInterval(function() {
-        if (counter < 60) {
-            seconds = counter < 10 ? `0${counter}` : parseInt(counter % 60);
+        if (counter <= 59) {
+            seconds = counter < 10 ? `0${counter}` : counter;
             // let sec = parseInt(seconds / 60);
             let minutes = mins < 10 ? `0${mins}` : mins;
             time = `${minutes}:${seconds}`
@@ -40,8 +40,7 @@ function startTimer() {
             counter = 1;
             mins++;
         }
-        
-        
+          
     }, 1000);
 }
 
@@ -203,6 +202,7 @@ function showGameEndModal(){
     gameResult.innerHTML = "";
     // set with new data
     const checkIcon ='<i class="fa fa-diamond"></i>';
+    gameResult.insertAdjacentHTML("afterbegin", `<p>It took you ${document.getElementById('timer').innerText} minutes!</p>`)
     gameResult.insertAdjacentHTML("afterbegin", `<p>Congratulations, You won with ${moveCounter} moves!</p>`);
     gameResult.insertAdjacentHTML("afterbegin", checkIcon);
     const gameEndModal = document.getElementById('gameEnd');
