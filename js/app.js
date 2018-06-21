@@ -203,7 +203,7 @@ function showGameEndModal(){
     // set with new data
     const checkIcon ='<i class="fa fa-diamond"></i>';
     gameResult.insertAdjacentHTML("afterbegin", `<p>It took you ${document.getElementById('timer').innerText} minutes!</p>`)
-    gameResult.insertAdjacentHTML("afterbegin", `<p>Congratulations, You won with ${moveCounter} moves!</p>`);
+    gameResult.insertAdjacentHTML("afterbegin", `<p>Congratulations, You won with ${moveCounter} moves and a rating of ${getNumberOfStars()}!</p>`);
     gameResult.insertAdjacentHTML("afterbegin", checkIcon);
     const gameEndModal = document.getElementById('gameEnd');
     gameEndModal.showModal();
