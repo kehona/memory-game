@@ -1,9 +1,8 @@
 
 let openCards = [];
-let previousSelection = "";
-let currentSelection = "";
+let previousSelection = '';
+let currentSelection = '';
 let moveCounter = 0;
-let gameStarted = false;
 let timer;
 
 /**
@@ -12,40 +11,40 @@ let timer;
 init();
 
 function addEventListenersToGame() {
-    const cards = document.getElementsByClassName('card');
-    for (const card of cards) {
-        // add click event to card
-        card.addEventListener('click', showCard, false);
-    }
-    // modal restart button
-    const restartButton = document.getElementById('restart');
-    restartButton.addEventListener('click', closeModal);
-    
+	const cards = document.getElementsByClassName('card');
+	for (const card of cards) {
+		// add click event to card
+		card.addEventListener('click', showCard, false);
+	}
+	// modal restart button
+	const restartButton = document.getElementById('restart');
+	restartButton.addEventListener('click', closeModal);
+
 }
 
 // http://logicalmoon.com/2015/05/using-javascript-to-create-a-timer/
 function startTimer() {
-    let counter = 0;
-    let seconds = 0;
-    let mins = 0;
-    timer = setInterval(function() {
-        if (counter <= 59) {
-            seconds = counter < 10 ? `0${counter}` : counter;
-            // let sec = parseInt(seconds / 60);
-            let minutes = mins < 10 ? `0${mins}` : mins;
-            time = `${minutes}:${seconds}`
-            document.getElementById('timer').textContent = time;
-            counter++;
-        } else {
-            counter = 1;
-            mins++;
-        }
-          
-    }, 1000);
+	let counter = 0;
+	let seconds = 0;
+	let mins = 0;
+	timer = setInterval(function () {
+		if (counter <= 59) {
+			seconds = counter < 10 ? `0${counter}` : counter;
+			// let sec = parseInt(seconds / 60);
+			let minutes = mins < 10 ? `0${mins}` : mins;
+			const time = `${minutes}:${seconds}`;
+			document.getElementById('timer').textContent = time;
+			counter++;
+		} else {
+			counter = 1;
+			mins++;
+		}
+
+	}, 1000);
 }
 
 function stopTimer() {
-    clearInterval(timer);
+	clearInterval(timer);
 }
 
 /*
@@ -60,81 +59,82 @@ function stopTimer() {
  * Added logic to load card on page
  */
 function loadCardsOnPage(faList) {
-    const cardList = createCardList(faList);
-    const shuffledCardList = cardList; //shuffle(cardList);
-    const deck = document.querySelector('.deck');
-    for (const card of shuffledCardList) {
-        deck.insertAdjacentHTML('beforeend', card);
-    }
+	const cardList = createCardList(faList);
+	const shuffledCardList = shuffle(cardList);
+	const deck = document.querySelector('.deck');
+	for (const card of shuffledCardList) {
+		deck.insertAdjacentHTML('beforeend', card);
+	}
 }
 
 function createCardList(faList) {
-    return faList.map(faName => {
-        return `<li class="card"><i class="fa ${faName}"></i></li>`;
-    });
- }
+	return faList.map(faName => {
+		return `<li class="card"><i class="fa ${faName}"></i></li>`;
+	});
+}
 
- // restart game
- const restartIcon = document.querySelector('.restart');
- restartIcon.addEventListener('click', init);
+// restart game
+const restartIcon = document.querySelector('.restart');
+restartIcon.addEventListener('click', init);
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+	var currentIndex = array.length,
+		temporaryValue, randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-    return array;
+	while (currentIndex !== 0) {
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+	return array;
 }
 
-function showCard(e) {
-    // show card and disable it.
-    this.classList.add('show', 'open', 'disable');
-    if (previousSelection == "") {
-        previousSelection = this;
-    } else {
-        currentSelection = this;
-        // check if selections match
-        const isMatch = matchSelectedCardToPreviousCard()
-        if (isMatch) {
-            // 1. add match class to card
-            previousSelection.classList.add('match');
-            this.classList.add('match');
-            // 2. add cards to openCards
-            openCards.push(previousSelection);
-            openCards.push(currentSelection);
-            // 3. remove click event from current card
-            this.removeEventListener('click', () => console.log("click event removed!"));
-            // 4. reinitialize the card selection identifiers.
-            resetSelectedCards();
-        } else {
-            // if cards don't match, then add mismatch class to items for some brief moment
-            previousSelection.classList.add('mismatch');
-            currentSelection.classList.add('mismatch');
-            // 2. transition to remove mismatch, show and open from cards
-            previousSelection.addEventListener('transitionend', removeTransition);
-            currentSelection.addEventListener('transitionend', removeTransition);
-            resetSelectedCards();
-        } 
-        // increment the number of moves by 1 after every two selections
-        moveCounter++;
-        setNumberOfStarsOnPage();
-        setMoves();
-        console.log("Number of stars:", getNumberOfStars());
-    }
-    // if all cards are open, alert game over
-    if (isGameOver()) {
-        // stop timer
-        stopTimer();
-        setTimeout(() => {
-            showGameEndModal();
-        }, 500)   
-    }  
+function showCard() {
+	// show card and disable it.
+	this.classList.add('show', 'open', 'disable');
+	if (previousSelection == '') {
+		previousSelection = this;
+	} else {
+		currentSelection = this;
+		// check if selections match
+		const isMatch = matchSelectedCardToPreviousCard();
+		if (isMatch) {
+			// 1. add match class to card
+			previousSelection.classList.add('match');
+			this.classList.add('match');
+			// 2. add cards to openCards
+			openCards.push(previousSelection);
+			openCards.push(currentSelection);
+			// 3. remove click event from current card
+			this.removeEventListener('click', () => console.log('click event removed!'));
+			// 4. reinitialize the card selection identifiers.
+			resetSelectedCards();
+		} else {
+			// if cards don't match, then add mismatch class to items for some brief moment
+			previousSelection.classList.add('mismatch');
+			currentSelection.classList.add('mismatch');
+			// 2. transition to remove mismatch, show and open from cards
+			previousSelection.addEventListener('transitionend', removeTransition);
+			currentSelection.addEventListener('transitionend', removeTransition);
+			resetSelectedCards();
+		}
+		// increment the number of moves by 1 after every two selections
+		moveCounter++;
+		setNumberOfStarsOnPage();
+		setMoves();
+		console.log('Number of stars:', getNumberOfStars());
+	}
+	// if all cards are open, alert game over
+	if (isGameOver()) {
+		// stop timer
+		stopTimer();
+		setTimeout(() => {
+			showGameEndModal();
+		}, 500);
+	}
 }
 
 /**
@@ -142,81 +142,81 @@ function showCard(e) {
  * @param {*} e 
  */
 function removeTransition(e) {
-    if (e.propertyName === "transform") {
-        console.log(this);
-        this.classList.remove('mismatch','show', "open", "disable")
-        // currentSelection.classList.remove('mismatch','show', "open")
-    }
-    console.log(e)
+	if (e.propertyName === 'transform') {
+		console.log(this);
+		this.classList.remove('mismatch', 'show', 'open', 'disable');
+		// currentSelection.classList.remove('mismatch','show', "open")
+	}
+	console.log(e);
 }
 
 /**
  *  check if the selected cards match.
  */
 function matchSelectedCardToPreviousCard() {
-    return previousSelection.isEqualNode(currentSelection);
+	return previousSelection.isEqualNode(currentSelection);
 
 }
 
 function resetSelectedCards() {
-    previousSelection = "";
-    currentSelection = "";
+	previousSelection = '';
+	currentSelection = '';
 }
 
 function isGameOver() {
-    return openCards.length === 16;
+	return openCards.length === 16;
 }
 
 function setNumberOfStarsOnPage() {
-    const stars = document.querySelector('.stars');
-    stars.innerHTML = "";
-    const numberOfStarsToDisplay = getNumberOfStars();
-    for (let i = 0; i < numberOfStarsToDisplay; i++) {
-        const li = document.createElement("li");
-        li.insertAdjacentHTML('beforeend', '<i class="fa fa-star"></i>');
-        stars.appendChild(li);
-    }
+	const stars = document.querySelector('.stars');
+	stars.innerHTML = '';
+	const numberOfStarsToDisplay = getNumberOfStars();
+	for (let i = 0; i < numberOfStarsToDisplay; i++) {
+		const li = document.createElement('li');
+		li.insertAdjacentHTML('beforeend', '<i class="fa fa-star"></i>');
+		stars.appendChild(li);
+	}
 }
 
 function setMoves() {
-    const moves = document.querySelector('.moves');
-    moves.innerHTML = moveCounter;
+	const moves = document.querySelector('.moves');
+	moves.innerHTML = moveCounter;
 }
 /**
  * determines the number of stars to display
  */
 function getNumberOfStars() {
-    if (moveCounter <= 8) {
-        return 5;
-    } else {
-        return parseInt(5 / (moveCounter / 8));
-    }
+	if (moveCounter <= 8) {
+		return 5;
+	} else {
+		return parseInt(5 / (moveCounter / 8));
+	}
 }
 
 /**
  * Show the modal when the game is over!
  */
-function showGameEndModal(){
-    const gameResult = document.getElementById('result');
-    // clear modal 
-    gameResult.innerHTML = "";
-    // set with new data
-    const checkIcon ='<i class="fa fa-diamond"></i>';
-    gameResult.insertAdjacentHTML("afterbegin", `<p>It took you ${document.getElementById('timer').innerText} minutes!</p>`)
-    gameResult.insertAdjacentHTML("afterbegin", `<p>Congratulations, You won with ${moveCounter} moves and a rating of ${getNumberOfStars()}!</p>`);
-    gameResult.insertAdjacentHTML("afterbegin", checkIcon);
-    const gameEndModal = document.getElementById('gameEnd');
-    gameEndModal.showModal();
+function showGameEndModal() {
+	const gameResult = document.getElementById('result');
+	// clear modal 
+	gameResult.innerHTML = '';
+	// set with new data
+	const checkIcon = '<i class="fa fa-diamond"></i>';
+	gameResult.insertAdjacentHTML('afterbegin', `<p>It took you ${document.getElementById('timer').innerText} minutes!</p>`);
+	gameResult.insertAdjacentHTML('afterbegin', `<p>Congratulations, You won with ${moveCounter} moves and a rating of ${getNumberOfStars()}!</p>`);
+	gameResult.insertAdjacentHTML('afterbegin', checkIcon);
+	const gameEndModal = document.getElementById('gameEnd');
+	gameEndModal.showModal();
 }
 
 /**
  * Closes the modal and restart game.
  */
 function closeModal() {
-    const gameEndModal = document.getElementById('gameEnd');
-    gameEndModal.close();
-    // restart game;
-    init();
+	const gameEndModal = document.getElementById('gameEnd');
+	gameEndModal.close();
+	// restart game;
+	init();
 }
 
 /*
@@ -230,20 +230,20 @@ function closeModal() {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
- function init() {
-    console.log("initalizing game!");
-    stopTimer();
-    startTimer();
-    const faList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle", "fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bomb", "fa-bicycle"];
-    const deck = document.querySelector('.deck');
-    deck.innerHTML = "";
-    openCards = [];
-    previousSelection = "";
-    currentSelection = "";
-    moveCounter = 0;
-    const cardList = createCardList(faList);
-    setMoves();
-    setNumberOfStarsOnPage();
-    loadCardsOnPage(faList);
-    addEventListenersToGame();
- }
+function init() {
+	console.log('initalizing game!');
+	stopTimer();
+	startTimer();
+	const symbols = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-leaf', 'fa-bomb', 'fa-bicycle'];
+	const faList = [...symbols, ...symbols];
+	const deck = document.querySelector('.deck');
+	deck.innerHTML = '';
+	openCards = [];
+	previousSelection = '';
+	currentSelection = '';
+	moveCounter = 0;
+	setMoves();
+	setNumberOfStarsOnPage();
+	loadCardsOnPage(faList);
+	addEventListenersToGame();
+}
