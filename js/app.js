@@ -59,12 +59,30 @@ function stopTimer() {
  * Added logic to load card on page
  */
 function loadCardsOnPage(faList) {
+	const deck = document.querySelector('.deck');
+	// remove any existing cards on page
+	deck.innerHTML = '';
 	const cardList = createCardList(faList);
 	const shuffledCardList = shuffle(cardList);
-	const deck = document.querySelector('.deck');
+	
 	for (const card of shuffledCardList) {
 		deck.insertAdjacentHTML('beforeend', card);
 	}
+}
+
+/**
+ * at start of game, briefly show all the cards on page
+ * @param {*} faList 
+ */
+function brieflyShowAllCardsOnPage(faList) {
+	const deck = document.querySelector('.deck');
+	setTimeout(() => {
+		const openCards = createOpenCardList(faList);
+		for (const card of openCards) {
+			deck.insertAdjacentHTML('beforeend', card);
+		}
+	}, 100);
+	
 }
 
 function createCardList(faList) {
@@ -72,6 +90,13 @@ function createCardList(faList) {
 		return `<li class="card"><i class="fa ${faName}"></i></li>`;
 	});
 }
+
+function createOpenCardList(faList) {
+	return faList.map(faName => {
+		return `<li class="card show open"><i class="fa ${faName}"></i></li>`;
+	});
+}
+
 
 // restart game
 const restartIcon = document.querySelector('.restart');
@@ -244,6 +269,20 @@ function init() {
 	moveCounter = 0;
 	setMoves();
 	setNumberOfStarsOnPage();
-	loadCardsOnPage(faList);
-	addEventListenersToGame();
+	brieflyShowAllCardsOnPage(faList);
+	// const cardList = createCardList(faList);
+	// const deck = document.querySelector('.deck');
+	// // show all cards for a second
+	// setTimeout(() => {
+		
+	// 	const shuffledCardList = shuffle(cardList);
+	// 	for (const card of shuffledCardList) {
+	// 		deck.insertAdjacentHTML('beforeend', card);
+	// 	}
+	// }, 1000);
+	setTimeout(() => {
+		loadCardsOnPage(faList);
+		addEventListenersToGame();
+	}, 500);
+	
 }
