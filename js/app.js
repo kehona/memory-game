@@ -270,16 +270,7 @@ function init() {
 	setMoves();
 	setNumberOfStarsOnPage();
 	brieflyShowAllCardsOnPage(faList);
-	// const cardList = createCardList(faList);
-	// const deck = document.querySelector('.deck');
-	// // show all cards for a second
-	// setTimeout(() => {
-		
-	// 	const shuffledCardList = shuffle(cardList);
-	// 	for (const card of shuffledCardList) {
-	// 		deck.insertAdjacentHTML('beforeend', card);
-	// 	}
-	// }, 1000);
+	// runs after all cards are briefly shown on page
 	setTimeout(() => {
 		loadCardsOnPage(faList);
 		addEventListenersToGame();
