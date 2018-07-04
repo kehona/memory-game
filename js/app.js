@@ -5,6 +5,7 @@ let currentSelection = '';
 let moveCounter = 0;
 let timer;
 
+
 /**
  * Inialize the game
  */
@@ -21,26 +22,32 @@ function addEventListenersToGame() {
 	restartButton.addEventListener('click', closeModal);
 
 }
-
-// http://logicalmoon.com/2015/05/using-javascript-to-create-a-timer/
+/**
+ *  timer functionality using Timer.js
+ */
 function startTimer() {
+	/*global Timer*/
 	let counter = 0;
 	let seconds = 0;
 	let mins = 0;
-	timer = setInterval(function () {
-		if (counter <= 59) {
-			seconds = counter < 10 ? `0${counter}` : counter;
-			// let sec = parseInt(seconds / 60);
-			let minutes = mins < 10 ? `0${mins}` : mins;
+
+	const myTimer = new Timer(({
+		tick: 1,
+		onstart : () => {console.log('timer started');},
+		onstop  : () => { console.log('timer stopped');},
+		onpause : () => { console.log('timer set on pause');},
+		onend   : () => { console.log('timer ended normally');},
+		ontick  : () => {
+			counter = counter + 1;
+			let sec = counter % 60;
+			seconds = sec < 10 ? `0${sec}` : sec;
+			mins = parseInt(counter / 60);
+			let minutes = mins < 10 ? `0${mins}` : mins; 
 			const time = `${minutes}:${seconds}`;
 			document.getElementById('timer').textContent = time;
-			counter++;
-		} else {
-			counter = 1;
-			mins++;
-		}
-
-	}, 1000);
+		},
+	}));
+	myTimer.start(60 * 60); // one hour
 }
 
 function stopTimer() {
