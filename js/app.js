@@ -109,17 +109,13 @@ function createOpenCardList(faList) {
 const restartIcon = document.querySelector('.restart');
 restartIcon.addEventListener('click', init);
 
-// Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-	var currentIndex = array.length,
-		temporaryValue, randomIndex;
-
-	while (currentIndex !== 0) {
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex -= 1;
-		temporaryValue = array[currentIndex];
-		array[currentIndex] = array[randomIndex];
-		array[randomIndex] = temporaryValue;
+	const length = array.length;
+	for (let i = 0; i < length; i++) {
+		let randomIndex =  Math.floor(Math.random() * length);
+		let temp = array[i];
+		array[i] = array[randomIndex];
+		array[randomIndex] = temp;
 	}
 	return array;
 }
