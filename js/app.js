@@ -5,7 +5,6 @@ let currentSelection = '';
 let moveCounter = 0;
 let timer;
 
-
 /**
  * Inialize the game
  */
@@ -20,38 +19,44 @@ function addEventListenersToGame() {
 	// modal restart button
 	const restartButton = document.getElementById('restart');
 	restartButton.addEventListener('click', closeModal);
-
+	// restart game
+	const restartIcon = document.querySelector('.restart');
+	restartIcon.addEventListener('click', restart);
 }
+
 /**
  *  timer functionality using Timer.js
  */
-function startTimer() {
+function MyTimer() {
 	/*global Timer*/
-	let counter = 0;
-	let seconds = 0;
-	let mins = 0;
+	this.counter = 0;
+	this.seconds = 0;
+	this.mins = 0;
 
-	const myTimer = new Timer(({
+	this.myTimer = new Timer(({
 		tick: 1,
 		onstart : () => {console.log('timer started');},
 		onstop  : () => { console.log('timer stopped');},
 		onpause : () => { console.log('timer set on pause');},
 		onend   : () => { console.log('timer ended normally');},
 		ontick  : () => {
-			counter = counter + 1;
-			let sec = counter % 60;
-			seconds = sec < 10 ? `0${sec}` : sec;
-			mins = parseInt(counter / 60);
-			let minutes = mins < 10 ? `0${mins}` : mins; 
-			const time = `${minutes}:${seconds}`;
+			this.counter = this.counter + 1;
+			let sec = this.counter % 60;
+			this.seconds = sec < 10 ? `0${sec}` : sec;
+			this.mins = parseInt(this.counter / 60);
+			let minutes = this.mins < 10 ? `0${this.mins}` : this.mins; 
+			const time = `${minutes}:${this.seconds}`;
 			document.getElementById('timer').textContent = time;
 		},
 	}));
-	myTimer.start(60 * 60); // one hour
-}
 
-function stopTimer() {
-	clearInterval(timer);
+	this.startTime = function() {
+		this.myTimer.start(60 * 60);
+	};
+	this.stopTime = function() {
+		this.myTimer.off('all');
+		this.myTimer == null;
+	};
 }
 
 /*
@@ -104,11 +109,6 @@ function createOpenCardList(faList) {
 	});
 }
 
-
-// restart game
-const restartIcon = document.querySelector('.restart');
-restartIcon.addEventListener('click', init);
-
 function shuffle(array) {
 	const length = array.length;
 	for (let i = 0; i < length; i++) {
@@ -157,9 +157,8 @@ function showCard() {
 	}
 	// if all cards are open, alert game over
 	if (isGameOver()) {
-		// stop timer
-		stopTimer();
 		setTimeout(() => {
+			timer.stopTime();
 			showGameEndModal();
 		}, 500);
 	}
@@ -247,6 +246,15 @@ function closeModal() {
 	init();
 }
 
+/**
+ * restart game when the restart icon is clicked
+ */
+function restart() {
+	document.getElementById('timer').textContent = '00.00';
+	timer.stopTime();
+	init();
+}
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -260,8 +268,6 @@ function closeModal() {
 
 function init() {
 	console.log('initalizing game!');
-	stopTimer();
-	startTimer();
 	const symbols = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-leaf', 'fa-bomb', 'fa-bicycle'];
 	const faList = [...symbols, ...symbols];
 	const deck = document.querySelector('.deck');
@@ -274,9 +280,11 @@ function init() {
 	setNumberOfStarsOnPage();
 	brieflyShowAllCardsOnPage(faList);
 	// runs after all cards are briefly shown on page
+
 	setTimeout(() => {
 		loadCardsOnPage(faList);
 		addEventListenersToGame();
 	}, 500);
-	
+	timer = new MyTimer();
+	timer.startTime();
 }
